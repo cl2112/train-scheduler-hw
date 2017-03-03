@@ -8,6 +8,7 @@
 		src="https://code.jquery.com/jquery-3.1.1.min.js"
 		integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 		crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
 	<script type="text/javascript" src="assets/javascript/moment.js"></script>
 	<title>Super Train Station: Cronos Chaos</title>
 </head>
@@ -21,7 +22,7 @@
 			<div class="col-xs-10 col-xs-offset-1">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h4>Train Schedule</h4>
+						<h5><b>Train Schedule</b></h5>
 					</div>
 					<div class="panel-body" id="trainSchedule">
 						<p>Train data goes here.</p>
@@ -31,10 +32,24 @@
 			<div class="col-xs-10 col-xs-offset-1">
 				<div class="panel panel-danger">
 					<div class="panel-heading">
-						<h4>New Train Input</h4>
+						<h5><b>New Train Input</b></h5>
 					</div>
 					<div class="panel-body">
-						<p>Admin input fields go here.</p>
+						<form class="form-group">
+							<label for="trainName">Name of Train:</label>
+							<input class="form-control" type="text" id="trainName" placeholder="Name">
+							<br>
+							<label for="destination">Train Destination:</label>
+							<input class="form-control" type="text" id="destination" placeholder="Destination">
+							<br>
+							<label for="firstArrival">First Arrival Time: HH:mm (military time)</label>
+							<input class="form-control" type="text" id="firstArrival" placeholder="HH:mm (military time)">
+							<br>
+							<label for="frequency">Train Frequency:</label>
+							<input class="form-control" type="text" id="frequency" placeholder="Frequency (in minutes)">
+							<br>
+							<button class="btn btn-danger" id="submit">Submit</button>
+						</form>
 					</div>
 				</div>
 			</div>
