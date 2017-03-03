@@ -16,7 +16,39 @@ var database = firebase.database();
 
 console.log(database);
 
+initialDataRetrieval();
 
+function initialDataRetrieval(){
+	database.ref("trains").once("value", function(snapshot){
+		snapshot.forEach(function(childSnapshot){
+			var dataId = childSnapshot.key;
+			childSnapshot.forEach(function(childSnapshot2){
+				var childKey = childSnapshot2.key;
+				var childData = childSnapshot2.val();
+				console.log(dataId, childKey, childData);
+			})
+		})
+		var trainsObj = snapshot.val();
+		console.log(trainsObj);
+	})
+}
+
+
+$("#submit").on("click", function(event){
+	event.preventDefault();
+	var trainName = $("#trainName").val();
+	var destination = $("#destination").val();
+	var firstArrival = $("#firstArrival").val();
+	var frequency = $("#frequency").val();
+
+	console.log(trainName, destination, firstArrival, frequency);
+	database.ref("trains").push({
+		trainName:trainName,
+		destination:destination,
+		firstArrival:firstArrival,
+		frequency:frequency
+	});
+});
 
 
 
