@@ -16,7 +16,7 @@ var database = firebase.database();
 
 console.log(database);
 
-initialDataRetrieval();
+//initialDataRetrieval();
 
 function initialDataRetrieval(){
 	database.ref("trains").once("value", function(snapshot){
@@ -51,6 +51,15 @@ $("#submit").on("click", function(event){
 });
 
 
+database.ref("trains").on("child_added", function(snap){
+	console.log(snap.val());
+	var trainName = snap.val().trainName;
+	var destination = snap.val().destination;
+	var firstArrival = snap.val().firstArrival;
+	var frequency = snap.val().frequency;
+
+	$("#trainSchedule").append("<div><h1>"+trainName+"</h1><p></p></div>")
+});
 
 
 
