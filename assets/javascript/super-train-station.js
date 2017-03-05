@@ -58,7 +58,13 @@ database.ref("trains").on("child_added", function(snap){
 	var firstArrival = snap.val().firstArrival;
 	var frequency = snap.val().frequency;
 
-	$("#trainSchedule").append("<div><h1>"+trainName+"</h1><p></p></div>")
+	$("#trainSchedule").append(
+		"<tr>" +
+			"<td>"+trainName+"</td>"+
+			"<td>"+destination+"</td>"+
+			"<td>"+firstArrival+"</td>"+
+			"<td>"+frequency+"</td>"+
+		"</tr>")
 });
 
 
