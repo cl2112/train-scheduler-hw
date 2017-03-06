@@ -52,11 +52,11 @@
 							<label for="destination">Train Destination:</label>
 							<input class="form-control" type="text" id="destination" placeholder="Destination" value="Twilight Zone">
 							<br>
-							<label for="firstArrival">First Arrival Time: HH:mm (military time)</label>
-							<input class="form-control" type="number" id="firstArrival" placeholder="HH:mm (military time)" value="1984">
+							<label for="firstArrival" id="firstArrivalLabel">First Arrival Time: (military time)</label>
+							<input class="form-control" type="text" id="firstArrival" placeholder="HH:mm (military time)" value="1904" maxlength="4">
 							<br>
-							<label for="frequency">Train Frequency:</label>
-							<input class="form-control" type="number" id="frequency" placeholder="Frequency (in minutes)" value="60">
+							<label for="frequency">Train Frequency: (in minutes)</label>
+							<input class="form-control" type="number" id="frequency" placeholder="Frequency (in minutes)" value="60" step>
 							<br>
 							<button class="btn btn-danger" id="submit">Submit</button>
 						</form>
