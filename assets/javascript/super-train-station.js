@@ -24,6 +24,8 @@ var database = firebase.database();
 
 var baselineDateString = "12-12-12"
 
+var firstArrivalDateString = "11-12-12"
+
 var baselineDate = moment(new Date(baselineDateString));
 
 //========================================================================================
@@ -69,35 +71,25 @@ database.ref("trains").on("child_added", function(snap){
 	console.log(trainName, destination, firstArrival, frequency);
 
 	// Create the moment objects to be used in the time calculations.
-	var firstArrivalMoment = moment(new Date(baselineDateString+ " " + firstArrival));
+	var firstArrivalMoment = moment(new Date(firstArrivalDateString+ " " + firstArrival));
 	var currentTime = moment().format("HH:mm");
 	var currentTimeMoment = moment(new Date(baselineDateString+" "+currentTime));
 	console.log("firstArrivalMoment",firstArrivalMoment.format("HH:mm"));
 	console.log("currentTime",currentTime);
 
-	//
-	//var timeDifferenceInMinutes = currentTimeMoment.diff(firstArrivalMoment, "minutes");
+	// Time calculations
 	var timeDifferenceInMinutes = currentTimeMoment.diff(firstArrivalMoment, "minutes");
 	console.log("timeDifferenceInMinutes",timeDifferenceInMinutes);
-	var minutesToNextArrival = timeDifferenceInMinutes % frequency;
+
+	var minutesOffFromNearestArrival = timeDifferenceInMinutes % frequency;
 	console.log("minutesToNextArrival",minutesToNextArrival);
 
 
-	if (minutesToNextArrival > 0){
-		var minutesToNextArrival = frequency - minutesToNextArrival;
-		console.log("minutesToNextArrival 3",minutesToNextArrival);
-		var nextArrvialTime = currentTimeMoment.add(minutesToNextArrival, "minutes").format("HH:mm");
-		console.log("nextArrvialTime",nextArrvialTime);
-	} else {
-		console.log("minutesToNextArrival 1",minutesToNextArrival);
-		var minutesToNextArrival = minutesToNextArrival * -1;
-		console.log("minutesToNextArrival 2",minutesToNextArrival);
-		var minutesToNextArrival = frequency - minutesToNextArrival;
-		console.log("minutesToNextArrival 3",minutesToNextArrival);
-		var nextArrvialTime = currentTimeMoment.subtract(minutesToNextArrival, "minutes").format("HH:mm");
-		console.log("nextArrvialTime",nextArrvialTime);
-		console.log("minutesToNextArrival",minutesToNextArrival);
-	}
+	var minutesToNextArrival = frequency - minutesOffFromNearestArrival;
+	console.log("minutesToNextArrival 3",minutesToNextArrival);
+	var nextArrvialTime = currentTimeMoment.add(minutesToNextArrival, "minutes").format("HH:mm");
+	console.log("nextArrvialTime",nextArrvialTime);
+	
 	
 
 	$("#trainSchedule").append(
