@@ -14,31 +14,15 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-console.log(database);
+console.log("database", database);
 
-//initialDataRetrieval();
-
-function initialDataRetrieval(){
-	database.ref("trains").once("value", function(snapshot){
-		snapshot.forEach(function(childSnapshot){
-			var dataId = childSnapshot.key;
-			childSnapshot.forEach(function(childSnapshot2){
-				var childKey = childSnapshot2.key;
-				var childData = childSnapshot2.val();
-				console.log(dataId, childKey, childData);
-			})
-		})
-		var trainsObj = snapshot.val();
-		console.log(trainsObj);
-	})
-}
 
 
 $("#submit").on("click", function(event){
 	event.preventDefault();
 	var trainName = $("#trainName").val();
 	var destination = $("#destination").val();
-	var firstArrival = $("#firstArrival").val();
+	var firstArrival =$("#firstArrival").val();
 	var frequency = $("#frequency").val();
 
 	if (validateTimeInput(firstArrival) === true){
@@ -48,7 +32,6 @@ $("#submit").on("click", function(event){
 		return console.log("time not vaild");
 	}
 
-	
 
 	console.log(trainName, destination, firstArrival, frequency);
 	database.ref("trains").push({
@@ -82,24 +65,11 @@ database.ref("trains").on("child_added", function(snap){
 //database.ref("trains").on("child_removed", function (snap){});
 
 function validateTimeInput(timeInput){
-	if (timeInput.length === 4){
 	var isValidTime = /^(((([0-1][0-9])|(2[0-3])):?[0-5][0-9])|(24:?00))/.test(timeInput);
 	return isValidTime;
-	} else if (timeInput.length === 5){
-		
-	};
 };
 
 
-function nextArrivalTime(firstArrival, frequency){
-	var firstArrivalTime = moment(new Date(firstArrival, "HH:mm"));
-	console.log(firstArrivalMoment);
-
-	var currentTime = moment();
-	console.log(currentTime);
-
-	var differenceInMinutes  
-};
 
 
 
