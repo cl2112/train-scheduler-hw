@@ -10,22 +10,27 @@ var config = {
   storageBucket: "super-train-station.appspot.com",
   messagingSenderId: "243788238099"
 };
-//========================================================================================
 
 firebase.initializeApp(config);
 
-var database = firebase.database();
+//========================================================================================
 
-console.log("database", database);
+
+
+//----------------------------------------------------------------------------------------
+// Global Variables
+
+var database = firebase.database();
 
 var baselineDateString = "12-12-12"
 
 var baselineDate = moment(new Date(baselineDateString));
 
-console.log("baselineDate===", baselineDate.format("LLL"));
+//========================================================================================
 
 
-//--------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------
 // Click event for input submission.
 
 $("#submit").on("click", function(event){
@@ -42,7 +47,6 @@ $("#submit").on("click", function(event){
 		return console.log("time not vaild");
 	}
 
-	console.log(trainName, destination, firstArrival, frequency);
 	database.ref("trains").push({
 		trainName:trainName,
 		destination:destination,
@@ -57,42 +61,44 @@ $("#submit").on("click", function(event){
 //Display train info
 
 database.ref("trains").on("child_added", function(snap){
-	//console.log(snap.val());
+	// Store the train properties from the database
 	var trainName = snap.val().trainName;
 	var destination = snap.val().destination;
 	var firstArrival = snap.val().firstArrival;
 	var frequency = snap.val().frequency;
+	console.log(trainName, destination, firstArrival, frequency);
 
-
+	// Create the moment objects to be used in the time calculations.
 	var firstArrivalMoment = moment(new Date(baselineDateString+ " " + firstArrival));
-
-	console.log(firstArrivalMoment.format("LLL"));
-
-	console.log(firstArrivalMoment.from(baselineDate));
-
 	var currentTime = moment().format("HH:mm");
-	console.log(currentTime);
-
 	var currentTimeMoment = moment(new Date(baselineDateString+" "+currentTime));
-	console.log("currentTimeMoment", currentTimeMoment.format("LLL"));
-	console.log("difference between firstArrival and currentTime",firstArrivalMoment.diff(currentTimeMoment, "minutes"));
+	console.log("firstArrivalMoment",firstArrivalMoment.format("HH:mm"));
+	console.log("currentTime",currentTime);
 
+	//
+	//var timeDifferenceInMinutes = currentTimeMoment.diff(firstArrivalMoment, "minutes");
 	var timeDifferenceInMinutes = currentTimeMoment.diff(firstArrivalMoment, "minutes");
-	console.log(timeDifferenceInMinutes);
-
+	console.log("timeDifferenceInMinutes",timeDifferenceInMinutes);
 	var minutesToNextArrival = timeDifferenceInMinutes % frequency;
-
 	console.log("minutesToNextArrival",minutesToNextArrival);
 
+
 	if (minutesToNextArrival > 0){
+		var minutesToNextArrival = frequency - minutesToNextArrival;
+		console.log("minutesToNextArrival 3",minutesToNextArrival);
 		var nextArrvialTime = currentTimeMoment.add(minutesToNextArrival, "minutes").format("HH:mm");
+		console.log("nextArrvialTime",nextArrvialTime);
 	} else {
-		var nextArrvialTime = currentTimeMoment.subtract(minutesToNextArrival, "minutes").format("HH:mm");
+		console.log("minutesToNextArrival 1",minutesToNextArrival);
 		var minutesToNextArrival = minutesToNextArrival * -1;
+		console.log("minutesToNextArrival 2",minutesToNextArrival);
+		var minutesToNextArrival = frequency - minutesToNextArrival;
+		console.log("minutesToNextArrival 3",minutesToNextArrival);
+		var nextArrvialTime = currentTimeMoment.subtract(minutesToNextArrival, "minutes").format("HH:mm");
+		console.log("nextArrvialTime",nextArrvialTime);
+		console.log("minutesToNextArrival",minutesToNextArrival);
 	}
 	
-
-	console.log(nextArrvialTime);
 
 	$("#trainSchedule").append(
 		"<tr>" +
@@ -110,7 +116,7 @@ database.ref("trains").on("child_added", function(snap){
 
 
 //--------------------------------------------------------------------------------------------
-// Check to see if the time that was grabbed from the form is formatted correctly.
+// Check to see if the time grabbed from the form is formatted correctly. Returns Boolean.
 
 function validateTimeInput(timeInput){
 	var isValidTime = /^(((([0-1][0-9])|(2[0-3])):[0-5][0-9])|(24:00))/.test(timeInput);
