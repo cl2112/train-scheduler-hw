@@ -120,17 +120,76 @@ function validateTimeInput(timeInput){
 
 
 
+function updateTrainTimes(){
+
+	$("#trainSchedule").empty();
+	$("#trainSchedule").append(
+		"<tr>"+
+			"<th>Train Name</th>"+
+			"<th>Destination</th>"+
+			"<th>Frequency (min)</th>"+
+			"<th>Next Arrival</th>"+
+			"<th>Minutes Away</th>"+
+		"</tr>")
+
+	database.ref("trains").once("value", function(snap){
+
+		snap.forEach(function(childSnap){
+
+			// Store the train properties from the database
+			var trainName = childSnap.val().trainName;
+			var destination = childSnap.val().destination;
+			var firstArrival = childSnap.val().firstArrival;
+			var frequency = childSnap.val().frequency;
+			console.log(trainName, destination, firstArrival, frequency);
+
+			// Create the moment objects to be used in the time calculations.
+			var firstArrivalMoment = moment(new Date(firstArrivalDateString+ " " + firstArrival));
+			var currentTime = moment().format("HH:mm");
+			var currentTimeMoment = moment(new Date(baselineDateString+" "+currentTime));
+			console.log("firstArrivalMoment",firstArrivalMoment.format("HH:mm"));
+			console.log("currentTime",currentTime);
+
+			// Time calculations
+			var timeDifferenceInMinutes = currentTimeMoment.diff(firstArrivalMoment, "minutes");
+			console.log("timeDifferenceInMinutes",timeDifferenceInMinutes);
+
+			var minutesOffFromNearestArrival = timeDifferenceInMinutes % frequency;
+			console.log("minutesOffFromNearestArrival",minutesOffFromNearestArrival);
+
+
+			var minutesToNextArrival = frequency - minutesOffFromNearestArrival;
+			console.log("minutesToNextArrival 3",minutesToNextArrival);
+			var nextArrvialTime = currentTimeMoment.add(minutesToNextArrival, "minutes").format("HH:mm");
+			console.log("nextArrvialTime",nextArrvialTime);
+			
+			
+
+			$("#trainSchedule").append(
+				"<tr>" +
+					"<td>"+trainName+"</td>"+
+					"<td>"+destination+"</td>"+
+					"<td>"+frequency+"</td>"+
+					"<td>"+nextArrvialTime+"</td>"+
+					"<td>"+minutesToNextArrival+"</td>"+
+				"</tr>");
+		});
+	});
+}
+
+
+
+function startUpdateTimer(){
+
+	setInterval(updateTrainTimes, 60000);
+}
 
 
 
 
 
 
-
-
-
-
-
+startUpdateTimer();
 
 
 
