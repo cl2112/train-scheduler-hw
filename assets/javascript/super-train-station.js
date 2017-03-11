@@ -82,7 +82,7 @@ database.ref("trains").on("child_added", function(snap){
 	console.log("timeDifferenceInMinutes",timeDifferenceInMinutes);
 
 	var minutesOffFromNearestArrival = timeDifferenceInMinutes % frequency;
-	console.log("minutesToNextArrival",minutesToNextArrival);
+	console.log("minutesOffFromNearestArrival",minutesOffFromNearestArrival);
 
 
 	var minutesToNextArrival = frequency - minutesOffFromNearestArrival;
@@ -122,15 +122,7 @@ function validateTimeInput(timeInput){
 
 function updateTrainTimes(){
 
-	$("#trainSchedule").empty();
-	$("#trainSchedule").append(
-		"<tr>"+
-			"<th>Train Name</th>"+
-			"<th>Destination</th>"+
-			"<th>Frequency (min)</th>"+
-			"<th>Next Arrival</th>"+
-			"<th>Minutes Away</th>"+
-		"</tr>")
+	var loopCounter = 0;
 
 	database.ref("trains").once("value", function(snap){
 
@@ -154,6 +146,7 @@ function updateTrainTimes(){
 			var timeDifferenceInMinutes = currentTimeMoment.diff(firstArrivalMoment, "minutes");
 			console.log("timeDifferenceInMinutes",timeDifferenceInMinutes);
 
+
 			var minutesOffFromNearestArrival = timeDifferenceInMinutes % frequency;
 			console.log("minutesOffFromNearestArrival",minutesOffFromNearestArrival);
 
@@ -163,16 +156,10 @@ function updateTrainTimes(){
 			var nextArrvialTime = currentTimeMoment.add(minutesToNextArrival, "minutes").format("HH:mm");
 			console.log("nextArrvialTime",nextArrvialTime);
 			
-			
-
-			$("#trainSchedule").append(
-				"<tr>" +
-					"<td>"+trainName+"</td>"+
-					"<td>"+destination+"</td>"+
-					"<td>"+frequency+"</td>"+
-					"<td>"+nextArrvialTime+"</td>"+
-					"<td>"+minutesToNextArrival+"</td>"+
-				"</tr>");
+		
+			$("#trainSchedule").children().eq(0).children().eq(loopCounter + 1).children().eq(3).html(nextArrvialTime);
+			$("#trainSchedule").children().eq(0).children().eq(loopCounter + 1).children().eq(4).html(minutesToNextArrival);
+			loopCounter ++;
 		});
 	});
 }
