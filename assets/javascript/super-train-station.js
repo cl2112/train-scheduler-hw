@@ -37,6 +37,7 @@ var baselineDate = moment(new Date(baselineDateString));
 
 $("#submit").on("click", function(event){
 	event.preventDefault();
+
 	var trainName = $("#trainName").val();
 	var destination = $("#destination").val();
 	var firstArrival =$("#firstArrival").val();
@@ -44,7 +45,6 @@ $("#submit").on("click", function(event){
 
 	if (validateTimeInput(firstArrival) === true){
 		console.log("validated time input");
-
 	} else {
 		return console.log("time not vaild");
 	}
@@ -55,6 +55,11 @@ $("#submit").on("click", function(event){
 		firstArrival:firstArrival,
 		frequency:frequency
 	});
+
+	$("#trainName").val("");
+	$("#destination").val("");
+	$("#firstArrival").val("");
+	$("#frequency").val("");
 });
 //=========================================================================================
 
